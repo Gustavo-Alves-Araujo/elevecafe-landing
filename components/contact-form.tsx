@@ -64,7 +64,7 @@ export default function ContactForm() {
               className="text-muted-foreground max-w-2xl mx-auto font-lora text-xl mt-6"
             >
               Estamos à disposição para transformar seu evento em uma experiência memorável com nossos serviços premium
-              de coffee break e alimentação.
+              de coffee break e alimentação
             </motion.p>
           </div>
 

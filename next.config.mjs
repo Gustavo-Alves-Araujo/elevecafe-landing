@@ -1,15 +1,20 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['v0.blob.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'v0.blob.com',
+      },
+    ],
     unoptimized: true,
-  },
-  eslint: {
-    ignoreDuringBuilds: true,
   },
   typescript: {
     ignoreBuildErrors: true,
   },
+  // Configuração Turbopack (Next.js 16+)
+  turbopack: {},
+  // Configuração Webpack (mantida para compatibilidade)
   webpack: (config, { isServer }) => {
     if (isServer) {
       // Ignorar jsPDF durante o build do servidor

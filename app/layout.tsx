@@ -46,6 +46,8 @@ export default function RootLayout({
       }}
     >
       <head>
+        {/* Favicon */}
+        <link rel="icon" href="/images/logo-gold.png" />
         {/* Meta Pixel Code */}
         <script
           dangerouslySetInnerHTML={{

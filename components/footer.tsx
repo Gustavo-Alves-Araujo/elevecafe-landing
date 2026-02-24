@@ -175,11 +175,23 @@ export default function Footer() {
                 </a>
               </li>
             </ul>
+             <p className="mt-3">
+            Feito por{" "}
+            <a
+              href="https://axolutions.com.br"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold hover:text-gold-light transition-colors"
+            >
+              axolutions.com.br
+            </a>
+          </p>
           </div>
         </div>
 
         <div className="border-t border-coffee-light/20 mt-12 pt-8 text-center text-cream/60 text-sm">
           <p>© {new Date().getFullYear()} Eleve Café. Todos os direitos reservados.</p>
+         
         </div>
       </div>
     </footer>

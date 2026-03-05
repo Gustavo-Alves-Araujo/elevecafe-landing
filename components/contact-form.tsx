@@ -13,13 +13,41 @@ import { Phone, Mail, Send, Facebook, Instagram, MessageSquare, MapPin, Sparkles
 
 export default function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    company: "",
+    subject: "",
+    message: "",
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    // Simulação de envio
-    setTimeout(() => {
+    setIsLoading(true)
+    setErrorMessage(null)
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      })
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error ?? "Erro ao enviar mensagem.")
+      }
       setIsSubmitted(true)
-    }, 500)
+    } catch (err: unknown) {
+      setErrorMessage(err instanceof Error ? err.message : "Erro ao enviar mensagem.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -237,6 +265,8 @@ export default function ContactForm() {
                               id="name"
                               placeholder="Seu nome"
                               required
+                              value={formData.name}
+                              onChange={handleChange}
                               className="border-coffee-light/30 focus-visible:ring-gold bg-white/80 h-12 rounded-lg"
                             />
                           </div>
@@ -249,6 +279,8 @@ export default function ContactForm() {
                               type="email"
                               placeholder="Seu e-mail"
                               required
+                              value={formData.email}
+                              onChange={handleChange}
                               className="border-coffee-light/30 focus-visible:ring-gold bg-white/80 h-12 rounded-lg"
                             />
                           </div>
@@ -262,6 +294,8 @@ export default function ContactForm() {
                             <Input
                               id="phone"
                               placeholder="Seu telefone"
+                              value={formData.phone}
+                              onChange={handleChange}
                               className="border-coffee-light/30 focus-visible:ring-gold bg-white/80 h-12 rounded-lg"
                             />
                           </div>
@@ -272,6 +306,8 @@ export default function ContactForm() {
                             <Input
                               id="company"
                               placeholder="Nome da empresa"
+                              value={formData.company}
+                              onChange={handleChange}
                               className="border-coffee-light/30 focus-visible:ring-gold bg-white/80 h-12 rounded-lg"
                             />
                           </div>
@@ -285,6 +321,8 @@ export default function ContactForm() {
                             id="subject"
                             placeholder="Assunto da mensagem"
                             required
+                            value={formData.subject}
+                            onChange={handleChange}
                             className="border-coffee-light/30 focus-visible:ring-gold bg-white/80 h-12 rounded-lg"
                           />
                         </div>
@@ -298,17 +336,24 @@ export default function ContactForm() {
                             placeholder="Digite sua mensagem..."
                             className="min-h-[150px] border-coffee-light/30 focus-visible:ring-gold bg-white/80 rounded-lg"
                             required
+                            value={formData.message}
+                            onChange={handleChange}
                           />
                         </div>
+
+                        {errorMessage && (
+                          <p className="text-red-600 text-sm">{errorMessage}</p>
+                        )}
 
                         <div className="pt-4">
                           <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                             <Button
                               type="submit"
-                              className="w-full bg-gold hover:bg-gold/90 text-coffee-dark font-medium text-lg py-6 h-auto shadow-lg"
+                              disabled={isLoading}
+                              className="w-full bg-gold hover:bg-gold/90 text-coffee-dark font-medium text-lg py-6 h-auto shadow-lg disabled:opacity-60"
                             >
                               <Sparkles className="mr-2 h-5 w-5" />
-                              Enviar Mensagem
+                              {isLoading ? "Enviando..." : "Enviar Mensagem"}
                             </Button>
                           </motion.div>
                         </div>

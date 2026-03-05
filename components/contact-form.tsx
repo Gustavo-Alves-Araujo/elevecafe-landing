@@ -43,6 +43,10 @@ export default function ContactForm() {
         throw new Error(data.error ?? "Erro ao enviar mensagem.")
       }
       setIsSubmitted(true)
+      const waMessage = encodeURIComponent(
+        `Olá! Acabei de enviar uma mensagem pelo formulário de contato do site.\n\nNome: ${formData.name}\nAssunto: ${formData.subject}`,
+      )
+      window.location.href = `https://wa.me/5521959017485?text=${waMessage}`
     } catch (err: unknown) {
       setErrorMessage(err instanceof Error ? err.message : "Erro ao enviar mensagem.")
     } finally {
